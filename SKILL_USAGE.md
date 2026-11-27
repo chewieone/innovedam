@@ -27,7 +27,7 @@ Skills live in `.agents/skills/` and are discovered by Antigravity automatically
 ## Manual / optional
 | Skill | Who | When |
 | --- | --- | --- |
-| agentation | Members 2, 6 | Only after team approves its license and the stack is Next.js |
+| agentation | Members 2, 6 | Skill installed and license approved; usable for guidance now. Its toolbar package and MCP server stay deferred until the team picks Next.js and sets them up |
 | codex | Member 1 | Only if the team installs and approves Codex CLI |
 
 Automatic vs manual: discovery is automatic, but treat interview (Phase 1), code-review-and-quality (each PR), and the security reviews (before merges they cover) as required steps in `HACKATHON_WORKFLOW.md`, not optional suggestions. Dependencies: none of the installed skills need extra runtimes or accounts except the two optional rows above.
