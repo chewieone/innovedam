@@ -26,7 +26,7 @@ TODO - TEAM DECISION REQUIRED. The stack is chosen in Phase 4 of `HACKATHON_WORK
 2. Open the folder in Antigravity.
 3. Copy `.env.example` to `.env` and fill in your own local values. Never commit `.env`.
 4. Install dependencies: TODO - add after stack selection.
-5. Restore project skills if missing: `npx skills experimental_install` (restores from `skills-lock.json`).
+5. Restore project skills if missing: `npx skills experimental_install` (restores from `skills-lock.json`). A CLI restore re-copies upstream files only, so afterwards run `git checkout -- .agents/skills` to bring back the license files and OWASP playbook files this repo tracks beside the skills.
 
 ## Run instructions
 TODO - add after the initial skeleton (Phase 7) exists.

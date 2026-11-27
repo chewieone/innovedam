@@ -36,4 +36,4 @@ Installation status legend: `installed` (approved and installed 2026-11-28), `de
 | testing | currents-dev `playwright-best-practices` (E2E), antfu/skills `vitest` (unit) | test frameworks chosen |
 | deployment | none suitable found; record unavailable until hosting chosen | hosting chosen |
 
-Install method for every skill: `npx skills add <owner/repo> --skill <name> --agent antigravity` from the repo root (project scope, writes `.agents/skills/`, maintains `skills-lock.json`). Verify with `npx skills list` and by checking the directory. Restore on a fresh clone: `npx skills experimental_install`.
+Install method for every skill: `npx skills add <owner/repo> --skill <name> --agent antigravity` from the repo root (project scope, writes `.agents/skills/`, maintains `skills-lock.json`). Verify with `npx skills list` and by checking the directory. Restore on a fresh clone: `npx skills experimental_install`. Note: a CLI restore re-copies upstream content only; the license files and OWASP `plays/` files this repo adds beside the skills are tracked in git, so run `git checkout -- .agents/skills` after a restore to bring them back.
