@@ -6,7 +6,7 @@ Status: TODO - TEAM DECISION REQUIRED for the stack (Phase 4) and system design 
 TODO - one diagram or paragraph: client, API, database, AI service, external services.
 
 ## Frontend architecture
-- Framework: TODO
+- Framework: React (chosen 2026-11-28). App toolchain (Next.js, Vite or other): TODO - TEAM DECISION REQUIRED
 - State management: TODO
 - Folder structure: TODO
 - Shared UI primitives live in: TODO (owned by Member 2; built before separate pages, per Phase 5)

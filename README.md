@@ -1,4 +1,4 @@
-# test-repo
+# innovedam
 
 Shared hackathon repository for our six-member team. Every member clones this repo, opens it in Google Antigravity, and works on their own branch and module.
 
@@ -12,7 +12,7 @@ TODO - TEAM DECISION REQUIRED. The stack is chosen in Phase 4 of `HACKATHON_WORK
 
 | Layer | Choice | Status |
 | --- | --- | --- |
-| Frontend framework | TODO | undecided |
+| Frontend framework | React | chosen by team lead 2026-11-28; Next.js vs another React toolchain still undecided |
 | Styling | TODO | undecided |
 | Backend framework | TODO | undecided |
 | Database | TODO | undecided |

@@ -1,0 +1,93 @@
+{
+  "version": 2,
+  "skills": {
+    "agentation": {
+      "source": "23jmo/jmo-skills",
+      "commit": "6082bf2c472857d6cfda48995ab985b69345aac6",
+      "sourceType": "github",
+      "skillPath": "skills/agentation/SKILL.md",
+      "computedHash": "5bf8eae279a37a37e8aec2d2d19da2dcc9266bf9f51ff91ab71fca70477f0806",
+      "installMode": "copy"
+    },
+    "animate": {
+      "source": "23jmo/jmo-skills",
+      "commit": "6082bf2c472857d6cfda48995ab985b69345aac6",
+      "sourceType": "github",
+      "skillPath": "skills/animate/SKILL.md",
+      "computedHash": "d17dd72236090f28b04cb28c38d727107c46c62961d60cb006e5712ba2742f26",
+      "installMode": "copy"
+    },
+    "api-and-interface-design": {
+      "source": "addyosmani/agent-skills",
+      "commit": "e997ac5b9a74eab332d5e9793bb38a38c8cfdd74",
+      "sourceType": "github",
+      "skillPath": "skills/api-and-interface-design/SKILL.md",
+      "computedHash": "f8cb4ee59fe787bf94bfe40086ca4652d3cb738e16805d10acca2da3b80a001e",
+      "installMode": "copy"
+    },
+    "api-security-review": {
+      "source": "OWASP/secure-agent-playbook",
+      "commit": "65d4efd2cd0b081d52101e9708792b944e4ddebb",
+      "sourceType": "github",
+      "skillPath": "plugins/code-security-skills/skills/api-security-review/SKILL.md",
+      "computedHash": "3278d70ea006ffb3c0457114fae4fa45263fefadec48d08487969aba195aa673",
+      "installMode": "copy"
+    },
+    "better-ui": {
+      "source": "23jmo/jmo-skills",
+      "commit": "6082bf2c472857d6cfda48995ab985b69345aac6",
+      "sourceType": "github",
+      "skillPath": "skills/better-ui/SKILL.md",
+      "computedHash": "2c205c8415ba496568a5c2c7f5a8864dcaded1505860557ca86031f8458990f9",
+      "installMode": "copy"
+    },
+    "code-review-and-quality": {
+      "source": "addyosmani/agent-skills",
+      "commit": "e997ac5b9a74eab332d5e9793bb38a38c8cfdd74",
+      "sourceType": "github",
+      "skillPath": "skills/code-review-and-quality/SKILL.md",
+      "computedHash": "c04b5cb0f38ea3aec41b0219478124a9b38d467c3cecd82cdf0ad694d9403628",
+      "installMode": "copy"
+    },
+    "diagnosing-bugs": {
+      "source": "mattpocock/skills",
+      "commit": "bbadaa631c37af594e5a05c9cefacd9956136b18",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/diagnosing-bugs/SKILL.md",
+      "computedHash": "87c78ae966e591f9ceb177789cc5cc9de69277cd26679ffd36ca5300f430d513",
+      "installMode": "copy"
+    },
+    "git-workflow-and-versioning": {
+      "source": "addyosmani/agent-skills",
+      "commit": "e997ac5b9a74eab332d5e9793bb38a38c8cfdd74",
+      "sourceType": "github",
+      "skillPath": "skills/git-workflow-and-versioning/SKILL.md",
+      "computedHash": "860b88bf82d823eaed15b9b9fa9ce4273f94c7bdcf3aeaa3e6649eb578763d4b",
+      "installMode": "copy"
+    },
+    "interview": {
+      "source": "23jmo/jmo-skills",
+      "commit": "6082bf2c472857d6cfda48995ab985b69345aac6",
+      "sourceType": "github",
+      "skillPath": "skills/interview/SKILL.md",
+      "computedHash": "5bc114b2f6f7a8553c06f1b06ca1834cc7f3aca8eacfb0881283fd998c4df22b",
+      "installMode": "copy"
+    },
+    "ste": {
+      "source": "23jmo/jmo-skills",
+      "commit": "6082bf2c472857d6cfda48995ab985b69345aac6",
+      "sourceType": "github",
+      "skillPath": "skills/ste/SKILL.md",
+      "computedHash": "6fd082a4c30758cbd4a7c51da5a42b867c232c81f628f7bd2c8028aa91ff1517",
+      "installMode": "copy"
+    },
+    "web-security-review": {
+      "source": "OWASP/secure-agent-playbook",
+      "commit": "65d4efd2cd0b081d52101e9708792b944e4ddebb",
+      "sourceType": "github",
+      "skillPath": "plugins/code-security-skills/skills/web-security-review/SKILL.md",
+      "computedHash": "4616411513f87759f62286ac51d099e14e113b3925e73baba020cf646b8c516e",
+      "installMode": "copy"
+    }
+  }
+}

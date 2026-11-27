@@ -4,7 +4,7 @@ Phase 4-5 output. Each decision records what, why, and who approved. Changing a 
 
 | Decision | Choice | Rationale | Decided by | Status |
 | --- | --- | --- | --- | --- |
-| Frontend framework | TODO - TEAM DECISION REQUIRED | | team | open |
+| Frontend framework | React | team lead decision, 2026-11-28 | team | decided; Next.js vs another React toolchain still open |
 | Styling system | TODO - TEAM DECISION REQUIRED | | team | open |
 | Backend framework | TODO - TEAM DECISION REQUIRED | | team | open |
 | Database | TODO - TEAM DECISION REQUIRED | | team | open |
