@@ -38,3 +38,13 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# Local PS-02 dataset workbooks, conversions, and runtime uploads (never commit or bundle)
+*.xlsx
+*.xls
+PS02_Ripple_Effect*
+data/
+datasets/
+uploads/
+*.converted.json
+*.converted.csv

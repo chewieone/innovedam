@@ -1,0 +1,247 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Clearance {
+  Internal
+  Confidential
+}
+
+enum WorkItemStatus {
+  Open
+  Closed
+}
+
+enum DecisionStatus {
+  Draft
+  Approved
+}
+
+enum OnboardingStatus {
+  Pending
+  Approved
+  Rejected
+}
+
+enum NotificationActionState {
+  Active
+  Withdrawn_Review
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  fullName     String   @map("full_name")
+  isDemo       Boolean  @default(false) @map("is_demo")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  createdCompanies   Company[]           @relation("CompanyAdmin")
+  employeeLinks      Employee[]          @relation("UserEmployee")
+  onboardingRequests OnboardingRequest[] @relation("RequesterUser")
+  reviewedRequests   OnboardingRequest[] @relation("ReviewerUser")
+
+  @@map("users")
+}
+
+model Company {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  adminUserId String   @map("admin_user_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  adminUser           User                 @relation("CompanyAdmin", fields: [adminUserId], references: [id], onDelete: Restrict)
+  employees           Employee[]
+  onboardingRequests  OnboardingRequest[]
+  workItems           WorkItem[]
+  dependencies        Dependency[]
+  decisions           Decision[]
+  impactNotifications ImpactNotification[]
+  workbookRules       WorkbookRule[]
+
+  @@index([adminUserId])
+  @@map("companies")
+}
+
+model Employee {
+  id           String    @id @default(cuid())
+  companyId    String    @map("company_id")
+  employeeCode String    @map("employee_code")
+  userId       String?   @map("user_id")
+  team         String
+  role         String
+  managerId    String?   @map("manager_id")
+  clearance    Clearance @default(Internal)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  company             Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user                User?                @relation("UserEmployee", fields: [userId], references: [id], onDelete: SetNull)
+  manager             Employee?            @relation("ManagerHierarchy", fields: [managerId], references: [id], onDelete: SetNull)
+  directReports       Employee[]           @relation("ManagerHierarchy")
+  ownedWorkItems      WorkItem[]           @relation("WorkItemOwner")
+  authoredDecisions   Decision[]           @relation("DecisionDecider")
+  notifications       ImpactNotification[] @relation("NotificationRecipient")
+  targetedRequests    OnboardingRequest[]  @relation("TargetManager")
+  claimedByRequests   OnboardingRequest[]  @relation("ClaimedEmployee")
+
+  @@unique([companyId, employeeCode])
+  @@unique([companyId, userId])
+  @@index([companyId, team])
+  @@index([managerId])
+  @@map("employees")
+}
+
+model OnboardingRequest {
+  id                String           @id @default(cuid())
+  companyId         String           @map("company_id")
+  userId            String           @map("user_id")
+  requestedTeam     String           @map("requested_team")
+  requestedRole     String           @map("requested_role")
+  targetManagerId   String?          @map("target_manager_id")
+  claimedEmployeeId String?          @map("claimed_employee_id")
+  status            OnboardingStatus @default(Pending)
+  reviewedByUserId  String?          @map("reviewed_by_user_id")
+  reviewedAt        DateTime?        @map("reviewed_at")
+  createdAt         DateTime         @default(now()) @map("created_at")
+  updatedAt         DateTime         @updatedAt @map("updated_at")
+
+  company         Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user            User      @relation("RequesterUser", fields: [userId], references: [id], onDelete: Cascade)
+  targetManager   Employee? @relation("TargetManager", fields: [targetManagerId], references: [id], onDelete: SetNull)
+  claimedEmployee Employee? @relation("ClaimedEmployee", fields: [claimedEmployeeId], references: [id], onDelete: SetNull)
+  reviewedByUser  User?     @relation("ReviewerUser", fields: [reviewedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([companyId, status, targetManagerId])
+  @@index([userId])
+  @@map("onboarding_requests")
+}
+
+model WorkItem {
+  id          String         @id @default(cuid())
+  companyId   String         @map("company_id")
+  workCode    String         @map("work_code")
+  programCode String         @map("program_code")
+  deliverable String
+  ownerId     String         @map("owner_id")
+  team        String
+  status      WorkItemStatus
+  dueDate     DateTime       @map("due_date")
+  visibility  Clearance
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+
+  company              Company                  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  owner                Employee                 @relation("WorkItemOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+  dependentEdges       Dependency[]             @relation("DependentWork")
+  prerequisiteEdges    Dependency[]             @relation("PrerequisiteWork")
+  rootDecisions        Decision[]               @relation("DecisionRootWork")
+  notificationItemRefs ImpactNotificationItem[]
+
+  @@unique([companyId, workCode])
+  @@index([companyId, ownerId])
+  @@index([companyId, programCode])
+  @@map("work_items")
+}
+
+model Dependency {
+  id                 String   @id @default(cuid())
+  companyId          String   @map("company_id")
+  dependentWorkId    String   @map("dependent_work_id")
+  prerequisiteWorkId String   @map("prerequisite_work_id")
+  relationship       String
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  company          Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  dependentWork    WorkItem @relation("DependentWork", fields: [dependentWorkId], references: [id], onDelete: Cascade)
+  prerequisiteWork WorkItem @relation("PrerequisiteWork", fields: [prerequisiteWorkId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, dependentWorkId, prerequisiteWorkId, relationship])
+  @@index([prerequisiteWorkId])
+  @@index([dependentWorkId])
+  @@map("dependencies")
+}
+
+model Decision {
+  id                  String         @id @default(cuid())
+  companyId           String         @map("company_id")
+  decisionCode        String         @map("decision_code")
+  occurredAt          DateTime       @map("occurred_at")
+  programCode         String         @map("program_code")
+  rootWorkId          String         @map("root_work_id")
+  deciderId           String         @map("decider_id")
+  decisionType        String         @map("decision_type")
+  status              DecisionStatus
+  visibility          Clearance
+  reversesDecisionId  String?        @map("reverses_decision_id")
+  decisionText        String         @map("decision_text")
+  createdAt           DateTime       @default(now()) @map("created_at")
+  updatedAt           DateTime       @updatedAt @map("updated_at")
+
+  company             Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  rootWork            WorkItem             @relation("DecisionRootWork", fields: [rootWorkId], references: [id], onDelete: Restrict)
+  decider             Employee             @relation("DecisionDecider", fields: [deciderId], references: [id], onDelete: Restrict)
+  reversesDecision    Decision?            @relation("DecisionReversal", fields: [reversesDecisionId], references: [id], onDelete: SetNull)
+  reversedByDecisions Decision[]           @relation("DecisionReversal")
+  notifications       ImpactNotification[]
+
+  @@unique([companyId, decisionCode])
+  @@index([companyId, status, rootWorkId])
+  @@map("decisions")
+}
+
+model ImpactNotification {
+  id                  String                  @id @default(cuid())
+  companyId           String                  @map("company_id")
+  decisionId          String                  @map("decision_id")
+  recipientEmployeeId String                  @map("recipient_employee_id")
+  actionState         NotificationActionState @default(Active) @map("action_state")
+  safeContextSummary  String                  @map("safe_context_summary")
+  createdAt           DateTime                @default(now()) @map("created_at")
+  updatedAt           DateTime                @updatedAt @map("updated_at")
+
+  company           Company                  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  decision          Decision                 @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+  recipientEmployee Employee                 @relation("NotificationRecipient", fields: [recipientEmployeeId], references: [id], onDelete: Cascade)
+  affectedItems     ImpactNotificationItem[]
+
+  @@unique([decisionId, recipientEmployeeId])
+  @@index([companyId, recipientEmployeeId])
+  @@map("impact_notifications")
+}
+
+model ImpactNotificationItem {
+  id             String   @id @default(cuid())
+  notificationId String   @map("notification_id")
+  workItemId     String   @map("work_item_id")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  notification ImpactNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  workItem     WorkItem           @relation(fields: [workItemId], references: [id], onDelete: Cascade)
+
+  @@unique([notificationId, workItemId])
+  @@map("impact_notification_items")
+}
+
+model WorkbookRule {
+  id          String   @id @default(cuid())
+  companyId   String   @map("company_id")
+  ruleCode    String   @map("rule_code")
+  description String
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, ruleCode])
+  @@map("workbook_rules")
+}

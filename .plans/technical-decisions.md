@@ -4,15 +4,19 @@ Phase 4-5 output. Each decision records what, why, and who approved. Changing a 
 
 | Decision | Choice | Rationale | Decided by | Status |
 | --- | --- | --- | --- | --- |
-| Frontend framework | React | team lead decision, 2026-11-28 | team | decided; Next.js vs another React toolchain still open |
-| Styling system | TODO - TEAM DECISION REQUIRED | | team | open |
-| Backend framework | TODO - TEAM DECISION REQUIRED | | team | open |
-| Database | TODO - TEAM DECISION REQUIRED | | team | open |
-| Authentication | TODO - TEAM DECISION REQUIRED | | team | open |
-| AI model/provider | TODO - TEAM DECISION REQUIRED | | team | open |
-| External APIs | TODO - TEAM DECISION REQUIRED | | team | open |
-| Hosting | TODO - TEAM DECISION REQUIRED | | team | open |
-| Testing framework | TODO - TEAM DECISION REQUIRED | | team | open |
-| Deployment approach | TODO - TEAM DECISION REQUIRED | | team | open |
-| Time constraints | TODO - TEAM DECISION REQUIRED | | team | open |
-| Team strengths notes | TODO - TEAM DECISION REQUIRED | | team | open |
+| Frontend framework & toolchain | React + Vite + TypeScript | React settled earlier; Vite + TS gives fast HMR, clean static build served by Express in prod, and shared TS contracts across stack | team lead (interview 2026-11-28) | decided |
+| Styling system | Tailwind CSS | Rapid utility styling for 24h sprint with design tokens mapped to Tailwind theme/CSS variables | team lead (interview 2026-11-28) | decided |
+| Interactive graph visualization | React Flow (`@xyflow/react`) | Interactive pan/zoom/node inspection for directed work-item dependency and ripple graphs | team lead (interview 2026-11-28) | decided |
+| Backend framework | Node.js + Express + TypeScript | Replaces earlier browser-only proposal; matches team Node/Express experience, single TS language, server-enforced R4 and auth | team lead (interview 2026-11-28) | decided |
+| Runtime validation & shared contracts | Zod + shared TypeScript types | Validates API payloads and uploaded `.xlsx` workbook sheets at runtime while sharing DTO types between client and server | team lead (interview 2026-11-28) | decided |
+| Database & ORM | PostgreSQL + Prisma ORM | Enforces relational FKs (self-FK `manager_id`, `Dependencies`, self-FK `reverses_id`), survives cloud redeploys, forward-only migrations | team lead (interview 2026-11-28) | decided |
+| Authentication | Real email/password (`bcrypt` + JWT in `HttpOnly` cookie) + seeded synthetic demo accounts | Genuine server-enforced identity & R4 clearance checks, plus seeded `Internal`/`Confidential` accounts for judge verification | team lead (interview 2026-11-28) | decided |
+| User-to-Employee & Role Seat model | Separate `User`, `Employee`, and `RoleSeat` / `HrTeamAssignment` tables | Allows `.xlsx` imports to populate org/work/decisions immediately, MyGate onboarding to link/create `Employee`, and HR role seats to transfer across successors with explicit team scopes while preserving immutable `decider_id` | team lead (interview 2026-11-28; expanded 2026-11-28 planning review) | decided |
+| Execution Progress vs. Workbook Status | Separate `WorkExecutionProgress` table alongside `WorkItem.status` (`Open`/`Closed`) and `Decision.status` (`Draft`/`Approved`) | Keeps PS-02 R1 (`Draft`/`Approved`) and R3 (`Open`/`Closed`) semantics intact while allowing `Manager` (Team Lead) + Admin override to update execution progress ("Approved != Finished") and HR to track read-only across assigned teams | team lead (planning review & `/interview` 2026-11-28) | decided |
+| HR Cross-Team Graph & Successor Clearance | Full causal chain shown in PS-02 Ripple Solver; HR Assigned Teams summary scoped strictly to assigned teams; successor inherits view under own `Employee.clearance` | Preserves R2/R3 causal transparency without cutting off traversal, enforces explicit HR team scoping, and keeps R4 clearance as the single source of truth | team lead (`/interview` 2026-11-28) | decided |
+| AI model/provider | None in MVP (deterministic R1-R5 engine) | Deterministic templates for R4 safe action context eliminate hallucination/prompt-leak risk and remove external API dependencies | team lead (interview 2026-11-28) | decided |
+| External APIs | None in MVP | Self-contained for 24h sprint (`TODO - TEAM DECISION REQUIRED` if any integration is added later) | team lead (interview 2026-11-28) | decided |
+| Hosting & deployment | Single-origin cloud deploy (Render or Railway for Express + built Vite bundle + managed Postgres via Neon or Supabase) | Same-origin serving avoids cross-origin `HttpOnly` cookie issues; exact provider choice finalized at deploy | team lead (interview 2026-11-28) | decided (provider pair open) |
+| Testing framework | Vitest + Supertest | Fast TS unit testing for R1-R5 ripple engine, Zod workbook parser, and Supertest HTTP integration tests for R4 redaction & auth | team lead (interview 2026-11-28) | decided |
+| Time constraints | 24-hour sprint; target submission 2026-11-29 | Exact cutoff hour on 2026-11-29: `TODO - TEAM DECISION REQUIRED` | team lead (interview 2026-11-28) | decided (cutoff time open) |
+| Team size & role split | 3 manual developers split by technical layer (Role A: Backend/Auth/R1-R5; Role B: Frontend/Graph; Role C: DB/Prisma/`.xlsx`/QA/Deploy) | Replaces withdrawn 6-member automated split; individual member names: `TODO - TEAM DECISION REQUIRED` | team lead (interview 2026-11-28) | decided (member names open) |

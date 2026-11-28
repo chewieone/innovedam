@@ -1,0 +1,13 @@
+:root {
+  --color-bg-canvas: #f8fafc;
+  --color-bg-surface: #ffffff;
+  --color-border-subtle: #e2e8f0;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-action-primary: #1d4ed8;
+  --color-action-primary-hover: #1e40af;
+  --color-status-open: #047857;
+  --color-status-closed: #64748b;
+  --color-status-confidential: #b45309;
+  --color-status-reversed: #b91c1c;
+}

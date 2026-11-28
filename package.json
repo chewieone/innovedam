@@ -1,0 +1,20 @@
+{
+  "name": "innovedam",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "shared",
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "npm --workspace=@innovedam/server run dev & npm --workspace=@innovedam/client run dev",
+    "dev:server": "npm --workspace=@innovedam/server run dev",
+    "dev:client": "npm --workspace=@innovedam/client run dev",
+    "build": "npm --workspace=@innovedam/shared run build && npm --workspace=@innovedam/client run build && npm --workspace=@innovedam/server run build",
+    "test": "npm --workspace=@innovedam/shared run build && npm --workspace=@innovedam/server run test",
+    "typecheck": "npm --workspace=@innovedam/shared run build && npm --workspace=@innovedam/server run typecheck && npm --workspace=@innovedam/client run typecheck",
+    "prisma:validate": "npm --workspace=@innovedam/server run prisma:validate",
+    "prisma:generate": "npm --workspace=@innovedam/server run prisma:generate"
+  }
+}

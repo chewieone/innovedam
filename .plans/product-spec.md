@@ -2,12 +2,30 @@
 
 Phase 2 output. Unanswered items: `TODO - TEAM DECISION REQUIRED`.
 
-- Product objective: TODO - TEAM DECISION REQUIRED
-- Target audience: TODO - TEAM DECISION REQUIRED
-- Core value proposition: TODO - TEAM DECISION REQUIRED
-- Unique selling proposition: TODO - TEAM DECISION REQUIRED
-- Major use cases: TODO - TEAM DECISION REQUIRED
-- Feature wishlist (input to MVP scoping): TODO - TEAM DECISION REQUIRED
-- AI requirements, if any: TODO - TEAM DECISION REQUIRED
-- External APIs and integrations: TODO - TEAM DECISION REQUIRED
-- Demo potential notes: TODO - TEAM DECISION REQUIRED
+- Product objective: Build a full-stack web application that solves **PS-02 ("The Ripple Effect")** across any schema-valid 5-sheet workbook (enforcing Rules R1-R5) and complements it with an organizational workspace where a Company Admin sets up the company and assigns HR team scopes, new members onboard via higher-up approval (MyGate-style), Team Leads update execution progress on their team's resulting work, and HR tracks decision follow-through across explicitly assigned teams—with role-bound history preserved for successor HR while keeping original decision authors intact and R4 confidentiality strictly enforced.
+- Target audience: Company Admins, HR representatives (scoped to assigned teams), Team Leads, Managers/Higher-ups, and individual contributors (`Internal` and `Confidential` clearance); plus hackathon judges testing alternate PS-02-formatted `.xlsx` datasets.
+- Core value proposition: Solves PS-02's transitive decision-impact and confidentiality rules accurately while bridging the operational gap between "a decision was approved" and "assigned teams actually executed the resulting work"—without losing follow-through across HR role transitions.
+- Unique selling proposition:
+  - **Full PS-02 R1-R5 Solver Preserved:** Deterministic, cycle-safe traversal across the complete dependency graph (`prerequisite_work_id -> dependent_work_id`, including root), never truncated by workspace filters; `Draft` vs `Approved` gating (R1), `Closed` pass-through without closed-item owner notification (R3), server-enforced `Confidential` redaction with safe action context (R4), and `Reverse` withdrawal/review (R5).
+  - **Explicit HR Team Scoping (Not Hierarchy Inherited):** HR views only teams explicitly assigned to their role seat, rather than every team below them in a manager tree.
+  - **Role-Bound Continuity & Author Integrity:** Decision history and follow-through stay attached to the role/team scope so a successor HR inherits the tracking view, while the original decision author (`decider_id`) remains permanently preserved and R4 clearance redaction is always evaluated against the active viewer's clearance.
+  - **Separated Lifecycle vs. Execution Progress:** Decision lifecycle (`Draft` / `Approved` / `Reversed`) triggers ripples per R1/R5; Team Leads independently update per-work-item execution progress (`Not_Started` / `In_Progress` / `Blocked` / `Completed`) without corrupting `Work_Items.status` (`Open` / `Closed`) used by R3.
+- Workbook Reconciliation (Supplied Fields vs. App-Layer Additions):
+  - **Supplied by PS-02 Workbook:** `Employees` (`employee_id`, `team`, `role`, `manager_id`, `clearance`), `Work_Items` (`work_id`, `program_id`, `deliverable`, `owner_id`, `team`, `status` Open/Closed, `due_date`, `visibility`), `Dependencies` (`dependent_work_id`, `prerequisite_work_id`, `relationship`), `Decisions` (`decision_id`, `timestamp`, `program_id`, `root_work_id`, `decider_id`, `decision_type`, `status` Draft/Approved, `visibility`, `reverses_id`, `decision_text`), `Rules` (R1-R5).
+  - **App-Layer Additions (not in workbook; never fabricated as sample workbook history):** `User` accounts & auth, `Company`, `OnboardingRequest` (MyGate approval), `RoleSeat` / `HrTeamAssignment` (explicit HR-to-team mapping and successor handoff), `WorkExecutionProgress` (Team Lead progress separate from `Open`/`Closed` and decision `Approved`), and `ImpactNotification` / follow-through state.
+- Major use cases:
+  1. **Company Setup, Workbook Import & HR Team Assignment:** Admin creates a company, imports a 5-sheet PS-02 `.xlsx` workbook validated by Zod, and assigns specific teams to HR role seats.
+  2. **MyGate-Style Member Onboarding:** New user requests to join a company/team/role (or claim an unlinked `Employee` slot), waits in `Pending` state, and gains access upon higher-up/admin approval.
+  3. **PS-02 Ripple Computation & Graph View:** Any authorized member inspects decisions and the complete R1-R5 transitive ripple graph (root -> hops -> `Closed` pass-throughs -> distinct `Open` owners), with server-side R4 redaction for `Internal` clearance.
+  4. **Team Lead Execution Progress:** Team Leads update execution progress and blockers on their team's resulting `Open` work items independently of decision `Approved` status.
+  5. **HR Assigned-Teams Tracking & Successor Continuity:** HR monitors decision follow-through and Team Lead execution progress across explicitly assigned teams; when a successor HR takes over the role seat, they inherit the role-bound tracking history while preserving original `decider_id` and enforcing R4 confidentiality.
+  6. **Live Decision Authoring & Transitions:** Authorized users create `Draft` decisions, `Approve` them to trigger R1-R4 ripples, and issue `Reverse` decisions per R5.
+- Feature wishlist (input to MVP scoping):
+  - All existing P0 scaffold & core features plus explicit HR team assignments, role-seat successor handoff, Team Lead execution progress tracking, and assignment-filtered workspace projections that preserve full R2/R3 traversal.
+- AI requirements, if any: None in MVP (100% deterministic R1-R5 engine and template-based R4 safe action context).
+- External APIs and integrations: None in MVP (`TODO - TEAM DECISION REQUIRED` if added later).
+- Demo potential notes: Judges can test PS-02 directly (upload any compliant `.xlsx`, verify R1-R5 and R4 redaction via `Internal` vs `Confidential` seeded accounts), plus test HR assigned-team scoping, Team Lead progress updates ("Approved != Finished"), and HR successor handoff preserving original decision author & R4 redaction.
+- Resolved product rules (settled 2026-11-28 `/interview`):
+  - **HR Graph vs. Summary Visibility:** In **PS-02 Ripple Solver**, HR sees the full causal dependency chain leading into their assigned team (structural graph intact, with R4 redaction on `Confidential` decision text); the **HR Assigned Teams** tracking/summary view remains scoped strictly to explicitly assigned teams.
+  - **Team Lead Identity & HR Permissions:** Team Lead means any approved employee with `role === 'Manager'` in that `team` (plus Admin override). Team Leads update execution progress on their team's resulting work; HR is read-only tracking on execution progress across explicitly assigned teams.
+  - **Successor HR Clearance Rule:** Role-bound decision history and follow-through transfer to the successor HR seat, while R4 redaction is always evaluated against the successor's own `Employee.clearance` (`Internal` sees redacted safe action context; `Confidential` sees full `decision_text`).
